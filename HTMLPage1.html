@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title >LEITOR DE CODIGOS DE BARRAS</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Adicione estilos personalizados aqui, se necessário */
+        body {
+            margin: 0;
+            padding: 0;
+            
+        }
+
+        #background-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1; /* Coloca o vídeo atrás de outros elementos */
+        }
+
+        #scanner-container {
+            position: absolute;
+            max-width: 640px; /* Defina a largura máxima desejada para a câmera */
+            margin: 0 auto;
+            max-height: 200; /* Centralize o contêiner */
+        }
+
+        #status-text {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 18px;
+        }
+
+        #scanner-line {
+            position: absolute;
+            width: 100%; /* Preencha toda a largura do contêiner */
+            height: 3px;
+            background-color: green;
+            animation: scan 2s linear infinite;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+            border-radius: 3px;
+            opacity: 0.7;
+            filter: brightness(150%);
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 49%;
+            }
+        }
+        h1 {
+            color: #00ff00;
+            font-size: 36px; /* Tamanho menor */
+            text-align: center;
+            text-transform: uppercase; /* Texto em maiúsculas */
+            font-family: 'Arial', sans-serif;
+            animation: neon 1.5s ease-in-out infinite alternate; /* Animação futurística */
+        }
+
+        @keyframes neon {
+            from {
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.7), 0 0 20px rgba(0, 255, 0, 0.7), 0 0 30px rgba(0, 255, 0, 0.7);
+            }
+
+            to {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.7), 0 0 30px rgba(0, 255, 0, 0.7), 0 0 40px rgba(0, 255, 0, 0.7);
+            }
+        }
+    </style>
+</head>
+<body>
+    <video id="background-video" autoplay loop muted>
+        <source src="11.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container mt-5">
+        <h1 class="text-center">LEITOR DE CÓDIGO DE BARRAS</h1>
+        <br />
+        <div class="text-center">
+            <div id="result"></div>
+            <br />
+            <button id="copyButton" class="btn btn-primary" style="display: block; margin: 0 auto; max-width: 100%;">Copiar Código</button>
+        </div>
+        <div class="text-center mb-4">
+            <div id="scanner-container" class="position-relative">
+                <div id="status-text">Procurando Código de Barras!</div>
+                <div id="scanner-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: document.querySelector("#scanner-container"),
+            },
+            decoder: {
+                readers: ["ean_reader", "code_128_reader", "code_39_reader", "upc_reader"],
+            },
+        }, function (err) {
+            if (err) {
+                console.error("Erro ao inicializar Quagga:", err);
+                return;
+            }
+            Quagga.start();
+        });
+
+        Quagga.onProcessed(function (result) {
+            const drawingCtx = Quagga.canvas.ctx.overlay;
+            const drawingCanvas = Quagga.canvas.dom.overlay;
+            const copyButton = document.getElementById("copyButton");
+
+            if (result) {
+                if (result.boxes) {
+                    drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                    result.boxes.filter(function (box) {
+                        return box !== result.box;
+                    }).forEach(function (box) {
+                        Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: "green", lineWidth: 2 });
+                    });
+                }
+
+                if (result.box) {
+                    Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: "#00F", lineWidth: 2 });
+                }
+
+                if (result.codeResult && result.codeResult.code) {
+                    const code = result.codeResult.code;
+
+                    // Adicione estilo neon ao texto "CÓDIGO DE BARRAS ENCONTRADO!"
+                    document.getElementById("status-text").innerHTML = '<span style="text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;">CÓDIGO DE BARRAS ENCONTRADO!</span>';
+
+                    document.getElementById("result").innerHTML = `<strong style="color: #00ff00;">Código de Barras: ${code}</strong>`;
+
+                    // Remova o texto de status
+                    document.getElementById("status-text").textContent = "CÓDIGO DE BARRAS ENCONTRADO!";
+
+                    // Exiba o botão "Copiar Código"
+                    copyButton.style.display = "block";
+
+                    // Adicione um ouvinte de evento ao botão "Copiar Código"
+                    copyButton.addEventListener("click", function () {
+                        // Copie o código para a área de transferência
+                        navigator.clipboard.writeText(code).then(function () {
+                            alert("CÓDIGO DE BARRAS COPIADO. CLICANDO EM OK, VOCÊ FECHARÁ ESTA ABA!");
+                            localStorage.setItem("codigoBarras", code);
+                            window.close();
+                        }).catch(function (err) {
+                            console.error("Erro ao copiar o código:", err);
+                        });
+                    });
+
+                    Quagga.stop();
+                } else {
+                    // Oculte o botão "Copiar Código" se nenhum código de barras for detectado
+                    copyButton.style.display = "none";
+                }
+            } else {
+                // Oculte o botão "Copiar Código" se nenhum resultado for processado
+                copyButton.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

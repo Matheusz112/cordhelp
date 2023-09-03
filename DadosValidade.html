@@ -1,0 +1,551 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<link rel="stylesheet" href="fontawesome/css/all.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="icon" href="CONT.png">
+<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    <title>Planilha de Informações</title>
+   
+<head>
+
+  <div class="video-container">
+
+    <video autoplay loop muted>
+      <source src="11.mp4" type="video/mp4">
+      
+    </video>
+
+
+</div>
+<div></div>
+
+</head>
+<body>
+  <div class="box-neon-animation">
+
+  </form>
+  <table id="tabelaInformacoes">
+    <thead>
+      <tr>
+        <BR>
+          <BR>
+            <BR>
+              <BR>
+        <th>NOME DO PRODUTO</th>
+        <th>QUANTIDADE</th>
+        <th>CODIGO DE BARRAS</th>
+        <th>VENCMENTO</th>
+        <th>SINTUAÇÃO DO PRODUTO</th>
+        <th>DIAS PARA VENCER</th>
+        <th>ID PRODUTO</th>
+        <th><i id="coding"class="material-icons">delete </i> <input id="Idproduto"type="text"  class="nome-produtoo" placeholder = "DIGITE O ID  DELETADO"></th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    
+  </table>
+
+  <ul>
+    <li>
+      <a href="Untitled-1.html">
+        <i class="material-icons">home</i >
+        
+      </a>
+      
+    </li>
+    <li>
+      <a href="textoemimagem.html">
+       <i class="material-icons">image</i>
+      </a>
+      </li>
+    <li>
+      <a href="DadosValidade.html">
+     <i class="material-icons">note_add</i>
+      </a>
+      
+    </li>
+    <li>
+      <a href="CONTAR.html">
+        <i class="material-icons">note_add</i>
+      </a> 
+    </li>
+    <li>
+      <a href="#">
+        <i class="material-icons">person</i>
+      </a> 
+    </li>
+  </ul>
+
+    </span>
+
+
+
+    <p class="tet"> ATENÇAO ANTES DE LOGAR RECOMENDAMOS QUE VOCÊ LEIA AS POLITICAS E PRIVACIDADES CRIADAS POR MATHEUS HENRIQUE NUNES.</p>
+    <a class="linkar" href="https://form.jotform.com/230357646483058" target="_blank">LER POLITICAS E  PRIVACIDADES</a>
+
+    
+    <input class="nome-produto"  type="button" value="MOSTRAR DADOS DOS PRODUTOS" onclick="salvarInformacoes()">
+    
+    <div class="neom-effect">
+
+    </div>
+  </div>
+   
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+    
+
+
+
+document.getElementById('coding').addEventListener('click', () => {
+alert("PRODUTO DELETADO COM SUCESSO!")
+const produto = document.getElementById("Idproduto").value;
+
+
+
+
+fetch(`https://api.baserow.io/api/database/rows/table/150731/${produto}/`, {
+  method: 'DELETE',
+  headers: {
+    Authorization: "Token QNhuEjQ6tUb2CmQyN2B5ipfhC61gLfXe"
+  }
+})
+  .then(response => {
+    if (response.ok) {
+      alert('Linha excluída com sucesso!');
+      window.location.href = 'produtotable.html';
+    } else {
+      alert('Erro ao excluir linha:', response.statusText);
+    }
+  })
+  .catch(error => {
+    alert('Erro ao excluir linha:', error);
+  });
+});
+
+function salvarInformacoes(){
+
+ 
+
+
+  axios({
+  method: "GET",
+  url: "https://api.baserow.io/api/database/rows/table/150731/?user_field_names=true",
+  headers: {
+    Authorization: "Token QNhuEjQ6tUb2CmQyN2B5ipfhC61gLfXe"
+  }
+})
+.then(response => {
+
+
+
+  const tables = response.data.results;
+  tables.forEach(table => {
+    console.log(table.id);
+    console.log(table.produto);
+    console.log(table.quantidade);
+    console.log(table.codig);
+    console.log(table.VENCIMENTO);
+    var tabela = document.getElementById("tabelaInformacoes");
+var linha = document.createElement("tr");
+
+var produtoColuna = document.createElement("td");
+produtoColuna.innerHTML = table.produto;
+linha.appendChild(produtoColuna);
+
+var quantidadeColuna = document.createElement("td");
+quantidadeColuna.innerHTML = table.quantidade;
+linha.appendChild(quantidadeColuna);
+
+var codigoBarrasColuna = document.createElement("td");
+codigoBarrasColuna.innerHTML = table.codig;
+linha.appendChild(codigoBarrasColuna);
+
+const dataSelecionada = new Date(table.VENCIMENTO);
+
+// Obtém o dia, mês e ano da data
+const dia = dataSelecionada.getDate()+1;
+const mes = (dataSelecionada.getMonth() + 1).toString().padStart(2, '0');// O mês começa em zero
+const ano = dataSelecionada.getFullYear();
+
+// Formata a data em dd/mm/yyyy
+const dataFormatada = `${dia}/${mes}/${ano}`;
+
+var vencimentoColuna = document.createElement("td");
+vencimentoColuna.innerHTML = dataFormatada;
+linha.appendChild(vencimentoColuna);
+
+
+
+
+
+var idTrue = document.createElement("td");
+idTrue.innerHTML = table.SIT;
+linha.appendChild(idTrue);
+
+
+
+var idTruee = document.createElement("td");
+idTruee.innerHTML = table.diferenca;
+linha.appendChild(idTruee);
+
+
+
+
+var idColuna = document.createElement("td");
+idColuna.innerHTML = table.id;
+linha.appendChild(idColuna);
+
+tabela.appendChild(linha);
+
+
+   
+  });
+
+})
+.catch(error => {
+  console.error(error);
+});
+
+
+}
+
+
+
+if (localStorage.getItem('apareceu') === 'false') {
+        localStorage.setItem('loggedIn', 'true');
+}
+      
+
+if (localStorage.getItem('loggedIn') === 'true') {
+  window.location.href = 'LOGIN.html';
+} else {
+
+}
+
+
+  </script>
+
+
+
+</body>
+
+
+
+
+<style>
+  .material-icons:hover{
+color: crimson;
+background: none;
+border:  none;
+cursor: pointer;
+background-size: 0%;
+  }
+  .nome-produtoo{
+color: rgb(248, 248, 248);
+background-color: #33333300;
+border: none;
+position: relative;
+  }
+.neom-effect {
+  position: relative;
+  width: 10%;
+  height: 10%;
+}
+
+.neom-effect img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  transition: opacity 0.5s;
+}
+
+.neom-effect img.neom {
+  opacity: 0;
+}
+
+.neom-effect:hover img {
+  opacity: 0;
+}
+
+.neom-effect:hover img.neom {
+  opacity: 1;
+  transition-delay: 0.5s;
+}
+.tet{
+
+font-size: small;
+color: #fff;
+
+}
+.lnkar{
+  font-size: small;
+color: #fff;
+
+}
+.video-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: -100;
+}
+
+video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+
+}
+
+.texto-neon {
+  font-size: 24px;
+  position: relative;
+  color: #fff;
+}
+
+.texto-real {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  color: #ff00de;
+  text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 30px #ff00de, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de;
+}
+
+.texto-clonado {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.5;
+  filter: blur(10px);
+  color: #ff00de;
+  text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 30px #ff00de, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de;
+}
+
+@keyframes digitar {
+  from { width: 0; }
+}
+
+@keyframes neon {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+
+</style>
+
+
+<style>
+
+
+
+
+.nome-produto {
+  background-color: rgba(255, 255, 255, 0.788);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(233, 224, 224);
+    font-size: 16px;
+    color:rgb(20, 20, 20);
+    border-radius: 5px;
+    font-size: 15px;
+    display: block;
+    margin: 10px auto;
+    width: 30%;
+ border-color: #1d3ae0;
+
+  
+  }
+
+
+
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+  }
+  
+  ul li {
+    list-style: none;
+    margin: 0 2px;
+  }
+  
+  ul li a {
+    position: relative; 
+    display: block;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 15px;
+    background: #333;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #666;
+    transition: .5s;
+  }
+  
+  ul li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20%;
+    height: 20%;
+    border-radius: 50%;
+    background: #ffee10;
+    transition: .5s;
+    transform: scale(.9);
+    z-index: -1;
+  }
+  
+  ul li a:hover::before {
+    transform: scale(1.1);
+    box-shadow: 0 0 3px #ffee10;
+  }
+  
+  ul li a:hover {
+    color: #ffee10;
+    box-shadow: 0 0 5px #ffee10;
+    text-shadow: 0 0 5px #ffee10;
+  }
+  
+  
+  
+  
+  
+  
+  
+      #tabelaInformacoes {
+        border-collapse: collapse;
+        color: aliceblue;
+        border-radius: 5px;
+        position: center;
+        left: center;
+        margin: 0 auto;
+      }
+      #tabelaInformacoes th, #tabelaInformacoes td {
+        padding: 5px;
+        border: 1px solid rgb(255, 255, 255);
+        border-radius: 5px;
+      }
+      #tabelaInformacoes tr:not(:first-child) {
+        border-top: none;
+      }
+      #tabelaInformacoes td:not(:first-child) {
+        border-left: none;
+        color: aliceblue;
+      }
+  
+  
+      .box-neon {
+    position: relative;
+    background-color: #111;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff, 0 0 80px #00b3ff, 0 0 100px #00b3ff, 0 0 150px #00b3ff;
+    z-index: 1;
+  }
+  
+  .box-neon::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    background-color: #2b2a2ac0;
+    opacity: 1%;
+    z-index: -1;
+    filter: blur(20px);
+  }
+  
+  .box-neon::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    background-color: #111;
+    z-index: -2;
+    filter: blur(40px);
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  .box-neon-animation {
+    position: relative;
+    background-color: #111;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff, 0 0 80px #00b3ff, 0 0 100px #00b3ff, 0 0 150px #00b3ff;
+    z-index: 1;
+    animation: neon-pulse 1.5s ease-in-out infinite alternate;
+  }
+  
+  .box-neon-animation::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    background-color: #111;
+    z-index: -1;
+    filter: blur(20px);
+  }
+  
+  .box-neon-animation::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    background-color: #111;
+    z-index: -2;
+    filter: blur(40px);
+  }
+  
+  @keyframes neon-pulse {
+    0% {
+      box-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff, 0 0 80px #00b3ff, 0 0 100px #00b3ff, 0 0 150px #00b3ff;
+    }
+    100% {
+      box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00b3ff, 0 0 50px #00b3ff, 0 0 80px #00b3ff;
+    }
+  }
+  
+  
+    </style>
+</html>

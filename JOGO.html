@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Futurística</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #ffffff, #ffffff); /* Fundo com gradiente branco */
+        }
+
+        video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: -1;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            text-align: center;
+            color: white;
+        }
+
+        .form {
+            background: rgba(255, 255, 255, 0.3); /* Fundo branco com transparência */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2); /* Fundo branco transparente */
+            color: #ffffff; /* Texto em branco neon */
+            outline: none;
+        }
+
+            input[type="text"]::placeholder,
+            input[type="password"]::placeholder {
+                color: #ffffff; /* Cor do texto do placeholder em branco neon */
+            }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ffffff; /* Botão em branco neon */
+            border: none;
+            color: #000000; /* Texto em preto */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            button:hover {
+                background-color: #0078D4; /* Efeito de cor no hover */
+            }
+
+        p {
+            color: #ffffff; /* Texto em branco neon */
+        }
+
+        a {
+            color: #FFD700; /* Links em amarelo dourado */
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop muted>
+        <source src="11.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="container">
+        <div class="form">
+            <h1 style="color: #ffffff;">Faça Login ou Cadastre-se</h1>
+            <form action="#" method="POST" onsubmit="return validarFormulario()">
+                <input type="text" id="cpf" name="cpf" placeholder="CPF PROFISSIONAL">
+                <input type="password" id="senha" name="senha" placeholder="SENHA DO PROFISSIONAL">
+                <button type="submit" name="login">Login</button>
+            </form>
+            <p>Funcionário Não Cadastrado <a href="CADASTROFUNCIONARIO.html" style="color: #FFD700;">Cadastre-se</a></p>
+        </div>
+    </div>
+    <script>
+        function validarFormulario() {
+            var cpf = document.getElementById("cpf").value;
+            var senha = document.getElementById("senha").value;
+
+            if (cpf === "704.112.896-24" && senha === "matheusrep") {
+                // Redirecionar para outra página se as credenciais estiverem corretas
+                window.location.href = "Untitled-1.html";
+                return false; // Impedir o envio do formulário padrão
+            } else {
+                alert("CPF ou senha incorretos. Por favor, verifique e tente novamente.");
+                return false; // Impedir o envio do formulário padrão
+            }
+        }
+    </script>
+</body>
+</html>

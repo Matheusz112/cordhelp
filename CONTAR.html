@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Meu Cubo 3D</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <ul>
+      <li>
+        <a href="Inicio.html">
+          <i class="material-icons">home</i >
+          
+        </a>
+        
+      </li>
+      <li>
+        <a href="textoemimagem.html">
+         <i class="material-icons">image</i>
+        </a>
+        </li>
+      <li>
+        <a href="produtotable.html">
+       <i class="material-icons">note_add</i>
+        </a>
+        
+      </li>
+      <li>
+        <a href="CONTAR.html">
+          <i class="material-icons">note_add</i>
+        </a> 
+      </li>
+      <li>
+        <a href="#">
+          <i class="material-icons">person</i>
+        </a> 
+      </li>
+    </ul>
+    <div class="CONFIG">
+      <BR>
+        <BR>
+          <BR>
+      <p>CONFIGURAÇOES</p>
+      <label id="meu-label"for="slider1">Largura:</label>
+
+      <input class="slider"type="range" min="0" max="10" value="0" id="slider1">
+      <label id="meu-label-alt" for="slider2">Altura:</label>
+      <input class="slider"type="range" min="0" max="15" value="0" id="slider2">
+      <label id="meu-label-pro"for="slider3">Profundidade:</label>
+      <input class="slider" type="range" min="0" max="10" value="0" id="slider3">
+      <label id="meu-label-re"for="slider3">QUANTIDADE TOTAL DE FARDOS:</label>
+     
+
+    </div>
+
+
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .CONFIG{
+        
+        background-color: rgb(0, 0, 0);
+        font-size: 1em;
+        border: none;
+        color: beige;
+
+      }
+      .slider{
+        width: 200px;
+        color: aliceblue;
+      }
+    }
+body {
+  margin: 0;
+  padding: 0;
+  background: #262626;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+ul li {
+  list-style: none;
+  margin: 0 15px;
+}
+
+ul li a {
+  position: relative; 
+  display: block;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  line-height: 63px;
+  background: #333;
+  border-radius: 50%;
+  font-size: 30px;
+  color: #666;
+  transition: .5s;
+}
+
+ul li a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #ffee10;
+  transition: .5s;
+  transform: scale(.9);
+  z-index: -1;
+}
+
+ul li a:hover::before {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #ffee10;
+}
+
+ul li a:hover {
+  color: #ffee10;
+  box-shadow: 0 0 5px #ffee10;
+  text-shadow: 0 0 5px #ffee10;
+ 
+}
+a span
+{
+  position: absolute;
+  display: block;
+}
+a span:nth-child(1)
+{
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #03e9f4);
+  animation: animate1 1s linear infinite;
+}
+    </style>
+  </head>
+  <body>
+    <script src="build/three.js"></script>
+    <script>
+
+
+  // Defina as dimensões iniciais do cubo
+
+
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+  const materials = [
+    new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.5, transparent: true }), // Vermelho
+    new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.5, transparent: true } ), // Verde
+    new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.5, transparent: true }), // Azul
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Amarelo
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Magenta
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Ciano
+  ];
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  const geometry = new THREE.BoxGeometry(100, 100, 100);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new THREE.Mesh(geometry, materials);
+  scene.add(cube);
+
+  camera.position.z = 50;
+
+  function animate() {
+    requestAnimationFrame(animate);
+   
+    cube.rotation.y += 0.003;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  const slider1 = document.getElementById("slider1");
+      const slider2 = document.getElementById("slider2");
+      const slider3 = document.getElementById("slider3");
+
+      slider1.addEventListener("input", () => {
+        cube.scale.x = slider1.value /30;
+        console.log("O VALOR DA LARGURA E:"+ slider1.value );
+        const meuLabell = document.getElementById("meu-label");
+        meuLabell.textContent = "Largura: "+slider1.value;
+        const somatudo = slider1.value*slider2.value*slider3.value;
+        const meuLabello = document.getElementById("meu-label-re");
+      meuLabello.textContent = "QUANTIDADE TOTAL DE FARDOS: "+somatudo;
+      });
+
+      slider2.addEventListener("input", () => {
+        cube.scale.y = slider2.value / 30;
+
+        const meuLabellk = document.getElementById("meu-label-alt");
+        meuLabellk.textContent = "Altura: "+slider2.value;
+        const somatudo = slider1.value*slider2.value*slider3.value;
+        const meuLabello = document.getElementById("meu-label-re");
+      meuLabello.textContent = "QUANTIDADE TOTAL DE FARDOS: "+somatudo;
+      });
+
+      slider3.addEventListener("input", () => {
+        cube.scale.z = slider3.value / 30;
+        const meuLabel = document.getElementById("meu-label-pro");
+        meuLabel.textContent = "Profundidade: "+slider3.value;
+        const somatudo = slider1.value*slider2.value*slider3.value;
+        const meuLabello = document.getElementById("meu-label-re");
+      meuLabello.textContent = "QUANTIDADE TOTAL DE FARDOS: "+somatudo;
+      });
+
+      
+
+      console.log(somatudo);
+      
+      if (localStorage.getItem('apareceu') === 'false') {
+        localStorage.setItem('loggedIn', 'true');
+}
+      
+
+if (localStorage.getItem('loggedIn') === 'true') {
+  window.location.href = 'LOGIN.html';
+} else {
+
+}
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
